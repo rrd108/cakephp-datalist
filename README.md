@@ -88,5 +88,7 @@ By this the `$languages` variable is available at `/src/Template/Skills/add.ctp`
     );
 ?>
 ```
-The end result should work like a charm and if you do not select one of the options but type in a new one, CakePHP will save it as a new entry in the associated model.
+The end result should work like a charm, and if you do not select one of the options 
+but type in a new one, CakePHP will save it as a new entry in the associated model.
+
 ![Alt Text](http://webmania.cc/static/cakephp/datalist.gif)
