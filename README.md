@@ -1,21 +1,28 @@
 # Datalist plugin for CakePHP
 
+Many of the HTML 5 new widgets are automatically supported by CakePHP.
+Unfortunatelly [datalist](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) is not supported by default.
+
+With the _datalist_ HTML 5 element you can create a widget similar to _select_ elements, but with _datalist_ you are not forced to select one of the options, but you can add any new value also.
+If you create a new option, than CakePHP will save the value in the associted model as a new record.
+  
+
 ## Installation
 
 You can install this plugin into your CakePHP application using [composer](http://getcomposer.org).
 
-The recommended way to install this:
+The recommended way to install the plugin is via composer:
 
 ```
 composer require rrd108/cakephp-datalist
 ```
 
-/config/bootstrap.php
+Than you should load the plugin in your `/config/bootstrap.php` file.
 ```php
 Plugin::load('Datalist'); 
 ```
 
-/src/View/AppView.php
+As the plugin extends the core HTML widgets you should load the form helper in your `/src/View/AppView.php` file like this:
 ```php
 public function initialize() 
 { 
@@ -28,18 +35,58 @@ public function initialize()
     ]);
 } 
 ```
+
+## Usage
     
-/src/Model/Table/GrantsTable.php
+In any model where you want to use _datalist_ you should add _datalist_ behavior.
+For example in your `/src/Model/Table/SkillsTable.php` you should have the following code, where `Languages` should be associated to `SkillsTable` and `name` is the field on what we want to use _datalist_.
 
 ```php
 public function initialize(array $config)
 {
     parent::initialize($config);
 
-    $this->setTable('grants');
-    $this->setDisplayField('shortname');
-    $this->setPrimaryKey('id');
-
-    $this->addBehavior('Datalist.Datalist', ['Issuers' => 'name', 'Companies' => 'name']);
+    $this->addBehavior(
+        'Datalist.Datalist', 
+        ['Languages' => 'name']
+    );
+    
+    $this->belongsTo('Languages', [
+        'foreignKey' => 'language_id',
+        'joinType' => 'INNER'
+        ]);
 }
 ```
+
+If you want more datalists you can add more models to the behavior.
+```php
+$this->addBehavior(
+    'Datalist.Datalist', 
+    ['Languages' => 'name', 'Countries' => 'country']
+);
+}
+```
+Than in your controller you do a simple find operation and set the result to the view.
+
+```php
+//src/Controller/SkillsController.php
+public function add()
+{
+    // your controller code
+    $languages = $this->Skills->Languages->find('list', ['limit' => 200]);
+    $this->set(compact('languages'));
+}
+```
+By this the `$languages` variable is available at `/src/Template/Skills/add.ctp`file.
+
+```php
+<?= $this->Form->create($skill) ?>
+<?php
+    echo $this->Form->control(
+        'language_id',
+        ['type' => 'datalist', 'options' => $languages]
+    );
+?>
+```
+The end result should work like a charm and if you do not select one of the options but type in a new one, CakePHP will save it as a new entry in the associated model.
+![Alt Text](http://webmania.cc/static/cakephp/datalist.gif)
