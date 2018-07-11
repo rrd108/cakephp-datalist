@@ -21,7 +21,6 @@ $config = [
                             document.getElementById("{{id}}").value = CakePHP_datalist["{{id}}"][e.target.value] 
                                 ? CakePHP_datalist["{{id}}"][e.target.value] 
                                 : document.getElementById("__{{id}}").value;
-                            console.log(document.getElementById("{{id}}").value);
                         });
             </script>'
 ];
