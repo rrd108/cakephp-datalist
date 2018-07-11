@@ -5,6 +5,7 @@ use Datalist\Model\Behavior\DatalistBehavior;
 use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -20,6 +21,13 @@ class DatalistBehaviorTest extends TestCase
      */
     public $Datalist;
 
+     public $fixtures = [
+        'plugin.Datalist.companies',
+        'plugin.Datalist.grants',
+        'plugin.Datalist.issuers',
+        'plugin.Datalist.companies_grants',
+    ];
+
     /**
      * setUp method
      *
@@ -28,6 +36,22 @@ class DatalistBehaviorTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        $this->Companies = TableRegistry::getTableLocator()->get(
+            'Companies',
+            ['className' => 'Datalist\Test\Model\Table\CompaniesTable']
+        );
+        $this->Grants = TableRegistry::getTableLocator()->get(
+            'Grants',
+            ['className' => 'Datalist\Test\Model\Table\GrantsTable']
+        );
+        $this->Issuers = TableRegistry::getTableLocator()->get(
+            'Issuers',
+            ['className' => 'Datalist\Test\Model\Table\IssuersTable']
+        );
+        $this->CompaniesGrants = TableRegistry::getTableLocator()->get(
+            'CompaniesGrants',
+            ['className' => 'Datalist\Test\Model\Table\CompaniesGrantsTable']
+        );
     }
 
     /**
@@ -37,8 +61,7 @@ class DatalistBehaviorTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Datalist);
-
+        unset($this->Datalist, $this->Companies, $this->Grants, $this->Issuers, $this->CompaniesGrants);
         parent::tearDown();
     }
 
@@ -49,42 +72,70 @@ class DatalistBehaviorTest extends TestCase
      */
     public function testBeforeMarshal()
     {
-        $data = [
+        $data = new ArrayObject([
             'issuer_id' => 'this is a string',
             'name' => 'Name of the element',
-        ];
-        $data = new ArrayObject($data);
-        $this->Datalist = new DatalistBehavior(new Table(), ['Issuers' => 'name']);
-
-        $options = new ArrayObject(['associated' => ['issuers']]);
-        $this->Datalist->beforeMarshal(new Event('Model.beforeSave'), $data, $options);
+        ]);
+        $behavior = $this->Grants->behaviors()->get('Datalist');
+        $behavior->beforeMarshal(new Event('Model.beforeSave'), $data, new ArrayObject());
         $this->assertEquals('this is a string', $data['issuer']['name']);
 
-        $data = [
+        $data = new ArrayObject([
             'name' => 'Name of the element',
-            'companies' => [
-                '_ids' => 'New Company'
-            ]
-        ];
-        $data = new ArrayObject($data);
-        $this->Datalist = new DatalistBehavior(new Table(), ['Companies' => 'name']);
-
-        $options = new ArrayObject(['associated' => ['companies']]);
-        $this->Datalist->beforeMarshal(new Event('Model.beforeSave'), $data, $options);
+            'companies' => ['_ids' => 'New Company']
+        ]);
+        $behavior = $this->Grants->behaviors()->get('Datalist');
+        $behavior->beforeMarshal(new Event('Model.beforeSave'), $data, new ArrayObject());
         $this->assertEquals('New Company', $data['companies'][0]['name']);
 
-        $data = [
+        $data = new ArrayObject([
             'name' => 'Name of the element',
             'issuer_id' => 'this is a string',
-            'companies' => [
-                '_ids' => 'New Company'
-            ]
-        ];
-        $data = new ArrayObject($data);
-        $this->Datalist = new DatalistBehavior(new Table(), ['Issuers' => 'name', 'Companies' => 'name']);
-        $options = new ArrayObject(['associated' => ['issuers', 'companies']]);
-        $this->Datalist->beforeMarshal(new Event('Model.beforeSave'), $data, $options);
+            'companies' => ['_ids' => 'New Company']
+        ]);
+        $behavior = $this->Grants->behaviors()->get('Datalist');
+        $behavior->beforeMarshal(new Event('Model.beforeSave'), $data, new ArrayObject());
         $this->assertEquals('this is a string', $data['issuer']['name']);
         $this->assertEquals('New Company', $data['companies'][0]['name']);
+    }
+
+    public function testSave()
+    {
+        $data = [
+            'name' => 'Grant 3',
+            'issuer_id' => 'New issuer - 3'
+        ];
+        $grant = $this->Grants->newEntity();
+        $grant = $this->Grants->patchEntity($grant, $data);
+        $this->Grants->save($grant);
+
+        $newGrant = $this->Grants->get(3, ['contain' => 'Issuers']);
+        //check if the new issuer added
+        $this->assertEquals(3, $newGrant->issuer->id);
+        $this->assertEquals('New issuer - 3', $newGrant->issuer->name);
+
+        $data = [
+            'name' => 'Grant 4',
+            'issuer_id' => 1,
+            'companies' => ['_ids' => 'New Company - 3']
+        ];
+        $grant = $this->Grants->newEntity();
+        $grant = $this->Grants->patchEntity($grant, $data);
+        $this->Grants->save($grant);
+        $newGrant = $this->Grants->find()->where(['Grants.id' => 4])->matching('Companies');
+        //check if the new company added
+        $this->assertEquals(3, $newGrant->toArray()[0]->_matchingData['Companies']->id);
+
+        $data = [
+            'name' => 'Grant 5',
+            'issuer_id' => 'New Isssuer 4',
+            'companies' => ['_ids' => 'New Company - 4']
+        ];
+        $grant = $this->Grants->newEntity();
+        $grant = $this->Grants->patchEntity($grant, $data);
+        $this->Grants->save($grant);
+        $newGrant = $this->Grants->find()->where(['Grants.id' => 5])->contain('Issuers')->matching('Companies');
+        $this->assertEquals(4, $newGrant->toArray()[0]->issuer->id);
+        $this->assertEquals(4, $newGrant->toArray()[0]->_matchingData['Companies']->id);
     }
 }
