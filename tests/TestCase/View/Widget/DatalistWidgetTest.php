@@ -21,7 +21,7 @@ class DatalistWidgetTest extends TestCase
     {
         parent::setUp();
         //read template into $config variable
-        require './vendor/rrd108/cakephp-datalist/config/form-templates.php';
+        require __DIR__ . '/../../../../config/form-templates.php';
         $this->context = $this->getMockBuilder('Cake\View\Form\ContextInterface')->getMock();
         $templates = $config + ['option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>'];
         $this->templates = new StringTemplate($templates);
