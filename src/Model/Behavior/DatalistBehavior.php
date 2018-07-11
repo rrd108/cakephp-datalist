@@ -31,8 +31,8 @@ class DatalistBehavior extends Behavior
     {
         $keysToRemove = [];
         foreach ($data as $key => $value) {
-            if (substr($key, -3) == '_id' && !is_int($value)) {
-                $model = substr($key, 0, -3);
+            $model = substr($key, 0, -3);
+            if (substr($key, -3) == '_id' && !intval($value) && strpos($model, '__') !== 0) {
                 if ($field = $this->getConfig(ucfirst(Inflector::pluralize($model)))) {
                     $data[$model] = [$field => $value];
                 }
@@ -40,7 +40,7 @@ class DatalistBehavior extends Behavior
             }
 
             if (is_array($value) && array_key_exists('_ids', $value)
-                && !is_array($value['_ids']) && !is_int($value['_ids'])) {
+                && !is_array($value['_ids']) && !intval($value['_ids'])) {
                 if ($field = $this->getConfig(ucfirst(Inflector::pluralize($key)))) {
                     $data[$key][] = [
                         $field => $value['_ids']
