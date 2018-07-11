@@ -19,9 +19,9 @@ The recommended way to install the plugin is via composer:
 composer require rrd108/cakephp-datalist
 ```
 
-Than you should load the plugin in your `/config/bootstrap.php` file.
-```php
-Plugin::load('Datalist'); 
+Than you should load the plugin by issuing the following command in your terminal.
+```
+bin/cake plugin load Datalist
 ```
 
 As the plugin extends the core HTML widgets you should load the form helper in your `/src/View/AppView.php` file like this:
