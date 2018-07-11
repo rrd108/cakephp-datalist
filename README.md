@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rrd108/cakephp-datalist.svg?branch=master)](https://travis-ci.org/rrd108/cakephp-datalist)
+
 # Datalist plugin for CakePHP
 
 Many of the HTML 5 new widgets are automatically supported by CakePHP.
