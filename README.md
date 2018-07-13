@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/rrd108/cakephp-datalist.svg?branch=master)](https://travis-ci.org/rrd108/cakephp-datalist)
+[![codecov](https://codecov.io/gh/rrd108/cakephp-datalist/branch/master/graph/badge.svg)](https://codecov.io/gh/rrd108/cakephp-datalist)
+
 
 # Datalist plugin for CakePHP
 
