@@ -8,8 +8,12 @@ Many of the HTML 5 new widgets are automatically supported by CakePHP.
 Unfortunatelly [datalist](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) is not supported by default.
 
 With the _datalist_ HTML 5 element you can create a widget similar to _select_ elements, but with _datalist_ you are not forced to select one of the options, but you can add any new value also.
+
+If you are looking for plain _datalist_ support by a CakePP plugin you should check
+[dereuromark/cakephp-tools](https://github.com/dereuromark/cakephp-tools)
+
+This plugin adds an extra feature on a plain _datalist_. 
 If you create a new option, than CakePHP will save the value in the associted model as a new record.
-  
 
 ## Installation
 
@@ -34,7 +38,7 @@ public function initialize()
     $this->loadHelper('Form', [
         'templates' => 'Datalist.form-templates',
         'widgets' => [
-            'datalist' => ['Datalist\View\Widget\DatalistWidget']
+            'datalistJs' => ['Datalist\View\Widget\DatalistJsWidget']
         ]
     ]);
 } 
@@ -88,7 +92,7 @@ By this the `$languages` variable is available at `/src/Template/Skills/add.ctp`
 <?php
     echo $this->Form->control(
         'language_id',
-        ['type' => 'datalist', 'options' => $languages]
+        ['type' => 'datalistJs', 'options' => $languages]
     );
 ?>
 ```
