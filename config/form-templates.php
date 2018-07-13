@@ -1,7 +1,7 @@
 <?php
 $config = [
-    'datalist' => '<input type="text" id="__{{id}}" name="__{{name}}" list="_{{id}}" autocomplete="off">'
-        . '<datalist id="_{{id}}"{{attrs}}>{{content}}</datalist>'
+    'datalistJs' => '<input type="text" id="__{{id}}" name="__{{name}}" list="datalist-{{id}}" autocomplete="off"{{inputAttrs}}>'
+        . '<datalist id="datalist-{{id}}"{{datalistAttrs}}>{{content}}</datalist>'
         . '<input type="hidden" name="{{name}}" id="{{id}}">'
         . '<script>
                 if (CakePHP_datalist === undefined) {
@@ -10,7 +10,7 @@ $config = [
                 
                 CakePHP_datalist["{{id}}"] = {};
                 [].forEach.call(
-                    document.querySelectorAll("#_{{id}} option"), 
+                    document.querySelectorAll("#datalist-{{id}} option"), 
                     function(element){
                         CakePHP_datalist["{{id}}"][element.value] = element.getAttribute("data-value");
                     });

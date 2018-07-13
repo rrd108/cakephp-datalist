@@ -3,17 +3,11 @@ namespace Datalist\View\Widget;
 
 use Cake\View\Form\ContextInterface;
 use Cake\View\Widget\SelectBoxWidget;
-use Cake\View\Widget\WidgetInterface;
 
-class DatalistWidget extends SelectBoxWidget implements WidgetInterface
+class DatalistJsWidget extends SelectBoxWidget
 {
 
     protected $_templates;
-
-    public function __construct($templates)
-    {
-        $this->_templates = $templates;
-    }
 
     /**
      * Render method form SelectBoxWidget
@@ -45,17 +39,22 @@ class DatalistWidget extends SelectBoxWidget implements WidgetInterface
         );
 
         $name = $data['name'];
+        $default = isset($data['val']) ? $data['val'] : null;
         unset($data['name'], $data['options'], $data['empty'], $data['val'], $data['escape']);
         if (isset($data['disabled']) && is_array($data['disabled'])) {
             unset($data['disabled']);
         }
 
-        $attrs = $this->_templates->formatAttributes($data);
+        $inputData['value'] = $default;
+        $inputAttrs = $this->_templates->formatAttributes($inputData);
+        $datalistAttrs = $this->_templates->formatAttributes($data);
+
         return $this->_templates->format(
-            'datalist',
+            'datalistJs',
             [
                 'name' => $name,
-                'attrs' => $attrs,
+                'inputAttrs' => $inputAttrs,
+                'datalistAttrs' => $datalistAttrs,
                 'content' => implode('', $options),
                 'id' => $data['id']
             ]

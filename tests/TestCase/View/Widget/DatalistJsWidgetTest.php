@@ -3,13 +3,12 @@ namespace Datalist\Test\TestCase\View\Widget;
 
 use Cake\TestSuite\TestCase;
 use Cake\View\StringTemplate;
-use Cake\View\View;
-use Datalist\View\Widget\DatalistWidget;
+use Datalist\View\Widget\DatalistJsWidget;
 
 /**
  * App\Model\Behavior\DatalistBehavior Test Case
  */
-class DatalistWidgetTest extends TestCase
+class DatalistJsWidgetTest extends TestCase
 {
 
     /**
@@ -40,7 +39,7 @@ class DatalistWidgetTest extends TestCase
 
     public function testRenderNoOptions()
     {
-        $datalist = new DatalistWidget($this->templates);
+        $datalist = new DatalistJsWidget($this->templates);
         $data = [
             'id' => 'day-id',
             'name' => 'day_id',
@@ -49,30 +48,18 @@ class DatalistWidgetTest extends TestCase
         $result = $datalist->render($data, $this->context);
 
         $this->assertContains(
-            '<input type="text" id="__day-id" name="__day_id" list="_day-id" autocomplete="off">',
+            '<input type="text" id="__day-id" name="__day_id" list="datalist-day-id" autocomplete="off">',
             $result
         );
         $this->assertContains(
-            '<datalist id="_day-id" id="day-id"></datalist>',
-            $result
-        );
-        $this->assertContains(
-            '<input type="hidden" name="day_id" id="day-id">',
-            $result
-        );
-        $this->assertContains(
-            'CakePHP_datalist["day-id"][element.value] = element.getAttribute("data-value");',
-            $result
-        );
-        $this->assertContains(
-            'document.getElementById("day-id").value = CakePHP_datalist["day-id"][e.target.value]',
+            '<datalist id="datalist-day-id" id="day-id"></datalist>',
             $result
         );
     }
 
     public function testRenderWithOptions()
     {
-        $datalist = new DatalistWidget($this->templates);
+        $datalist = new DatalistJsWidget($this->templates);
         $data = [
             'id' => 'day-id',
             'name' => 'day_id',
@@ -81,7 +68,7 @@ class DatalistWidgetTest extends TestCase
         ];
         $result = $datalist->render($data, $this->context);
         $this->assertContains(
-            '<datalist id="_day-id" id="day-id">'
+            '<datalist id="datalist-day-id" id="day-id">'
                 . '<option data-value="m">Monday</option><option data-value="t">Tuesday</option>'
                 . '</datalist>',
             $result
