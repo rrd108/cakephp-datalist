@@ -9,7 +9,7 @@ Unfortunatelly [datalist](https://developer.mozilla.org/en-US/docs/Web/HTML/Elem
 
 With the _datalist_ HTML 5 element you can create a widget similar to _select_ elements, but with _datalist_ you are not forced to select one of the options, but you can add any new value also.
 
-If you are looking for plain _datalist_ support by a CakePP plugin you should check
+If you are looking for plain _datalist_ support by a CakePHP plugin you should check
 [dereuromark/cakephp-tools](https://github.com/dereuromark/cakephp-tools)
 
 This plugin adds an extra feature on a plain _datalist_. 
