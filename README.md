@@ -15,6 +15,11 @@ If you are looking for plain _datalist_ support by a CakePP plugin you should ch
 This plugin adds an extra feature on a plain _datalist_. 
 If you create a new option, than CakePHP will save the value in the associted model as a new record.
 
+## Backward compatibility
+
+From version 1.0.0 we have renamed the widget, so in the `AppView.php` and in your template files you should use `datalistJs` instead of `datalist` as described below.
+Sorry for breaking backward compatibility, but there were only a few installs of the previous versions and as [dereuromark/cakephp-tools](https://github.com/dereuromark/cakephp-tools) implemented plain _datalist_, this was the easiest way to do...
+
 ## Installation
 
 You can install this plugin into your CakePHP application using [composer](http://getcomposer.org).
