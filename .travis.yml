@@ -6,6 +6,7 @@ sudo: true
 
 php:
   - 5.6
+    env: PREFER_LOWEST=1
   - 7.0
   - 7.1
   - 7.2
@@ -14,7 +15,8 @@ matrix:
   fast_finish: true
 
 before_script:
-  - composer install --prefer-source --no-interaction;
+  - if [[ $PREFER_LOWEST != 1 ]]; then composer install --prefer-source --no-interaction ; fi
+  - if [[ $PREFER_LOWEST == 1 ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable ; fi
 
 script:
     - vendor/bin/phpunit --coverage-clover=coverage.xml
