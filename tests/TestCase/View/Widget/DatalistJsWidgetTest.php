@@ -73,5 +73,30 @@ class DatalistJsWidgetTest extends TestCase
                 . '</datalist>',
             $result
         );
+
+        $this->assertContains(
+            '<script>
+                if (CakePHP_datalist === undefined) {
+                    var CakePHP_datalist = {};
+                }
+                
+                CakePHP_datalist["day-id"] = {};
+                [].forEach.call(
+                    document.querySelectorAll("#datalist-day-id option"), 
+                    function(element){
+                        CakePHP_datalist["day-id"][element.value] = element.getAttribute("data-value");
+                    });
+                
+                document.getElementById("__day-id")
+                    .addEventListener("blur", 
+                        function (e) {
+                            document.getElementById("day-id").value = CakePHP_datalist["day-id"][e.target.value] 
+                                ? CakePHP_datalist["day-id"][e.target.value] 
+                                : document.getElementById("__day-id").value;
+                        });
+            </script>',
+            $result
+        );
+
     }
 }
