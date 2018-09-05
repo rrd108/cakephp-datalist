@@ -50,6 +50,11 @@ class DatalistBehavior extends Behavior
                     $keysToRemove[] = $key;
                 }
             }
+
+            if (is_array($value) && array_key_exists('_ids', $value)
+                && !is_array($value['_ids']) && intval($value['_ids'])) {
+                $data[$key]['_ids'] = [$value['_ids']];
+            }
         }
 
         foreach ($keysToRemove as $key) {

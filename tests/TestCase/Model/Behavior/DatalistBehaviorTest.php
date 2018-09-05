@@ -138,4 +138,28 @@ class DatalistBehaviorTest extends TestCase
         $this->assertEquals(4, $newGrant->toArray()[0]->issuer->id);
         $this->assertEquals(4, $newGrant->toArray()[0]->_matchingData['Companies']->id);
     }
+
+    public function testSaveWithExistingCompanies()
+    {
+        $data = [
+            'name' => 'Grant 6',
+            'issuer_id' => 1,
+            'companies' => ['_ids' => [1,2]]
+        ];
+        $grant = $this->Grants->newEntity();
+        $grant = $this->Grants->patchEntity($grant, $data);
+        $newGrant = $this->Grants->save($grant);
+        $this->assertEquals(1, $newGrant->toArray()['companies'][0]['id']);
+        $this->assertEquals(2, $newGrant->toArray()['companies'][1]['id']);
+
+        $data = [
+            'name' => 'Grant 7',
+            'issuer_id' => 1,
+            'companies' => ['_ids' => 2]
+        ];
+        $grant = $this->Grants->newEntity();
+        $grant = $this->Grants->patchEntity($grant, $data);
+        $newGrant = $this->Grants->save($grant);
+        $this->assertEquals(2, $newGrant->toArray()['companies'][0]['id']);
+    }
 }
