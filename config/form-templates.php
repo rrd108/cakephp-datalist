@@ -1,5 +1,5 @@
 <?php
-$config = [
+return [
     'datalistJs' => '<input type="text" id="__{{id}}" name="__{{name}}" list="datalist-{{id}}" autocomplete="off"{{inputAttrs}}>'
         . '<datalist id="datalist-{{id}}"{{datalistAttrs}}>{{content}}</datalist>'
         . '<input type="hidden" name="{{name}}" id="{{id}}">'
