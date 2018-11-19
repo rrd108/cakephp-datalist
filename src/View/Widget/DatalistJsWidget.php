@@ -6,7 +6,7 @@ use Cake\View\Widget\SelectBoxWidget;
 
 class DatalistJsWidget extends SelectBoxWidget
 {
-
+    /** @var  \Cake\View\StringTemplate $_templates */
     protected $_templates;
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Datalist\Test\TestCase\View\Widget;
 
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\StringTemplate;
 use Datalist\View\Widget\DatalistJsWidget;
@@ -19,10 +20,10 @@ class DatalistJsWidgetTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        //read template into $config variable
-        require __DIR__ . '/../../../../config/form-templates.php';
+        $config = Configure::read('datalistJs');
         $this->context = $this->getMockBuilder('Cake\View\Form\ContextInterface')->getMock();
-        $templates = $config + ['option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>'];
+        $templates['datalistJs'] = $config;
+        $templates['option'] = '<option value="{{value}}"{{attrs}}>{{text}}</option>';
         $this->templates = new StringTemplate($templates);
     }
 
