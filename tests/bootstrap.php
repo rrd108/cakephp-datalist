@@ -8,7 +8,6 @@
  */
 
 use Cake\Datasource\ConnectionManager;
-use Cake\Routing\DispatcherFactory;
 
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
